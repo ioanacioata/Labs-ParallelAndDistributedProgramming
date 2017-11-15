@@ -1,0 +1,19 @@
+Each account has a lock.
+
+1. When a transfer is running, the 2 accounts involved in the transfer are locked in
+such a manner so that a deadlock is not created.
+
+We lock the source account and  we try to acquire a lock for the target account.
+    If this is not possible we, unlock the source account, sleep and lock again the #
+    source account. This way, we avoid any possible deadlocks.
+
+    - if the balance is not enough for the transfer we release the lock for the
+        source account and the target account, and stop the transfer
+
+    - otherwise, we make the transfer and in the end of it, we release the locks
+    form the source and target account
+
+2. When we do a consistency check, we lock each accounts and compute the consistency
+check and then we unlock them.
+This way, no other transfers can modify the state of these accounts until the consistency
+check is over.
