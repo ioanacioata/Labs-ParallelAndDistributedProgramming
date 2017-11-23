@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 #endregion
 
+//3. Like the previous, but also use the async/await mechanism.
+
 namespace Lab5_CSharp
 {
     /// <summary>

@@ -6,12 +6,6 @@ using System.Text;
 
 namespace Lab5_CSharp
 {
-    public struct AsyncMessage
-    {
-        public Socket socket;
-        //si ceva string ???
-        
-    }
     //1. Directly implement the parser on the callbacks(event-driven)
     class Connection1
     {
@@ -24,14 +18,14 @@ namespace Lab5_CSharp
 
         public IAsyncResult StartConnection1()
         {
-            Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            return s.BeginConnect(url, 80, requestCallback: RecieveConnection1, state: new AsyncMessage() { socket = s, /**/ });
+            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            return socket.BeginConnect(url, 80, requestCallback: RecieveConnection1, state: socket);
         }
 
         public void RecieveConnection1(IAsyncResult ar)
         {
             Console.WriteLine("Enter ReceiveConnection 1");
-            Socket socket = (Socket)ar.AsyncState;  //cast to async message
+            Socket socket = (Socket)ar.AsyncState;  
             Send(socket, "GET / HTTP/1.1 \nHost: " + url + " \n");
             StateObject stateObject = new StateObject { workSocket = socket };
             socket.BeginReceive(stateObject.buffer, 0, StateObject.BUFFER_SIZE, 0, Read_Callback, stateObject);

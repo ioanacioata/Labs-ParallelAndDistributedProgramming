@@ -24,18 +24,18 @@ namespace Lab5_CSharp
         {
             result = 0;
             manualResetEvent = new ManualResetEvent(false);
-            StartConnection1();
+            StartConnection2();
             manualResetEvent.WaitOne();
             return result;
         }
 
-        public IAsyncResult StartConnection1()
+        public IAsyncResult StartConnection2()
         {
-            Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            return s.BeginConnect(url, 80, requestCallback: RecieveConnection1, state: s);
+            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            return socket.BeginConnect(url, 80, requestCallback: RecieveConnection2, state: socket);
         }
 
-        public void RecieveConnection1(IAsyncResult ar)
+        public void RecieveConnection2(IAsyncResult ar)
         {
             Console.WriteLine("Enter ReceiveConnection 2");
             Socket socket = (Socket)ar.AsyncState;

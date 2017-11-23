@@ -13,6 +13,7 @@ namespace Lab5_CSharp
             //Exemplu();
             //Impl1();
             Impl2();
+            Impl3Async();
         }
 
         private static void Exemplu()
@@ -61,6 +62,23 @@ namespace Lab5_CSharp
             Console.WriteLine("result " + result);
             Console.WriteLine("result2 " + result2);
             System.Threading.Thread.Sleep(2000);
+        }
+       
+
+        private static async void Impl3Async()
+        {
+
+            await DoSomething("www.ubbcluj.ro");
+            await DoSomething("www.cs.ubbcluj.ro");
+
+        }
+        private static async Task DoSomething(String adr)
+        {
+            Connection3 connect = new Connection3(adr);
+            Task<int> task = connect.DoTask();
+            int result = await task;
+            Console.WriteLine("result " + result);
+
         }
     }
 }

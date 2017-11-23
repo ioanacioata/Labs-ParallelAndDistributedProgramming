@@ -43,8 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Connection1.cs" />
-    <Compile Include="Connection2.cs" />
+    <Compile Include="sol1\Connection1.cs" />
+    <Compile Include="sol1\Connection2.cs" />
+    <Compile Include="sol1\Connection3.cs" />
     <Compile Include="Downloader.cs" />
     <Compile Include="StateObject.cs" />
     <Compile Include="Program.cs" />
