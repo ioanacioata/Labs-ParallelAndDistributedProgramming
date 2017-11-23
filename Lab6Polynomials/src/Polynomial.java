@@ -9,28 +9,33 @@ import java.util.Random;
 public class Polynomial {
 	private static final int BOUND = 10;
 	private List<Integer> coefficients;
-	private Random randomGenerator = new Random();
 
 	public Polynomial(List<Integer> coefficients) {
 		this.coefficients = coefficients;
 	}
 
+	/**
+	 * Generates a polynomial with random coefficients, with a given degree.
+	 *
+	 * @param degree - Integer
+	 */
 	public Polynomial(int degree) {
 		coefficients = new ArrayList<>(degree + 1);
 		//Generate the rest of the coefficients
+		Random randomGenerator = new Random();
 		for (int i = 0; i < degree; i++) {
-			coefficients.add(randomGenerator.nextInt(10));
+			coefficients.add(randomGenerator.nextInt(BOUND));
 		}
 		//the coefficient of the biggest power has to be different than 0
-		int biggestRankCoefficient = randomGenerator.nextInt(BOUND);
-		if (biggestRankCoefficient == 0) {
-			biggestRankCoefficient++;
-		}
-		coefficients.add(biggestRankCoefficient);
+		coefficients.add(randomGenerator.nextInt(BOUND) + 1);
 	}
 
 	public int getDegree() {
 		return this.coefficients.size() - 1;
+	}
+
+	public int getLength() {
+		return this.coefficients.size();
 	}
 
 	public List<Integer> getCoefficients() {
