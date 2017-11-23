@@ -1,13 +1,19 @@
-public class Main {
-	public static void main(String[] args) {
+import java.util.ArrayList;
+import java.util.Arrays;
 
-		Polynomial p = new Polynomial(2);
-		Polynomial q = new Polynomial(3);
+public class Main {
+	public static void main(String[] args) throws InterruptedException {
+
+		Polynomial p = new Polynomial(10);
+		Polynomial q = new Polynomial(10);
+//		Polynomial p = new Polynomial(new ArrayList<Integer>(Arrays.asList(1,1))); //1x^1 + 1x^0
+//		Polynomial q = new Polynomial(new ArrayList<Integer>(Arrays.asList(1,3))); //3x^1 + 1x^0  => 3x^2 + 4x^1 + 1x^0
 		System.out.println("pol p:"+p);
 		System.out.println("pol q"+q);
-		System.out.println("Addition of polynomials: ");
-		System.out.println(PolynomialOperation.add(p,q));
-		System.out.println("Multiplication of polynomials: ");
-		System.out.println(PolynomialOperation.multiplySequencial(p,q));
+		System.out.println("Simple sequential multiplication of polynomials: ");
+		System.out.println(PolynomialOperation.multiplicationSequencialForm(p,q));
+		System.out.println("Simple parallel multiplication of polynomials: ");
+		System.out.println(PolynomialOperation.multiplicationParallelizedForm(p,q,5));
+
 	}
 }
