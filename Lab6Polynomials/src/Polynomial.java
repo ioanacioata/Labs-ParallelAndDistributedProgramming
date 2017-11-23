@@ -4,7 +4,7 @@ import java.util.Random;
 
 /**
  * Contains the list of the coefficients of the polynomial.
- * The first coefficients in the list corresponds to the biggest power, and the last corresponds to x^0.
+ * The first coefficients in the list corresponds to x^0 and the last corresponds to the biggest power .
  */
 public class Polynomial {
 	private static final int BOUND = 10;
@@ -15,18 +15,22 @@ public class Polynomial {
 		this.coefficients = coefficients;
 	}
 
-	public Polynomial(int biggestCoefficientRank) {
-		coefficients = new ArrayList<>(biggestCoefficientRank + 1);
-		//the coefficient of the biggest power has to be different than 0
-		int firstCoefficient = randomGenerator.nextInt(BOUND);
-		if (firstCoefficient == 0) {
-			firstCoefficient++;
-		}
-		coefficients.add(firstCoefficient);
+	public Polynomial(int degree) {
+		coefficients = new ArrayList<>(degree + 1);
 		//Generate the rest of the coefficients
-		for (int i = 1; i <= biggestCoefficientRank; i++) {
+		for (int i = 0; i < degree; i++) {
 			coefficients.add(randomGenerator.nextInt(10));
 		}
+		//the coefficient of the biggest power has to be different than 0
+		int biggestRankCoefficient = randomGenerator.nextInt(BOUND);
+		if (biggestRankCoefficient == 0) {
+			biggestRankCoefficient++;
+		}
+		coefficients.add(biggestRankCoefficient);
+	}
+
+	public int getDegree() {
+		return this.coefficients.size() - 1;
 	}
 
 	public List<Integer> getCoefficients() {
@@ -36,12 +40,12 @@ public class Polynomial {
 	@Override
 	public String toString() {
 		StringBuilder str = new StringBuilder();
-		int power = coefficients.size() - 1;
-		for (Integer c : coefficients) {
-			str.append(" ").append(c).append("x^").append(power).append(" +");
+		int power = getDegree();
+		for (int i = getDegree(); i >= 0; i--) {
+			str.append(" ").append(coefficients.get(i)).append("x^").append(power).append(" +");
 			power--;
 		}
 		str.deleteCharAt(str.length() - 1); //delete last +
-		return "Polynomial: " + str.toString();
+		return str.toString();
 	}
 }
