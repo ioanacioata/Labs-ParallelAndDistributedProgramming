@@ -34,7 +34,7 @@ Write a program that is capable of simultaneously downloading several files thro
 
 ### Lab 6 - Parallelizing techniques
   Due: week 8.  
-  http://www.cs.ubbcluj.ro/~rlupsa/edu/pdp/lab-6-parallel-algo.html
+  http://www.cs.ubbcluj.ro/~rlupsa/edu/pdp/lab-6-parallel-algo.html  
   Perform the multiplication of 2 polynomials. Use both the regular O(n2) algorithm and the Karatsuba algorithm, and each in both the sequencial form and a parallelized form. Compare the 4 variants.
 
 ### Lab 7 - Parallelizing techniques (2)
