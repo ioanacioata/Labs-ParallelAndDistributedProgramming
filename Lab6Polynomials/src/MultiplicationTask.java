@@ -14,14 +14,17 @@ public class MultiplicationTask implements Runnable {
 		this.result = result;
 	}
 
+	/**
+	 * Calculate coefficients from the result in the interval: [starting index, ending index)
+	 */
 	@Override
 	public void run() {
 		for (int index = start; index < end; index++) {
 			//case - no more elements to calculate
 			if (index > result.getLength()) {
-				//System.out.println("RETURNED");
 				return;
 			}
+			//find all the pairs that we add to obtain the value of a result coefficient
 			for (int j = 0; j <= index; j++) {
 				if (j < p1.getLength() && (index - j)< p2.getLength()) {
 					int value = p1.getCoefficients().get(j) * p2.getCoefficients().get(index-j);
