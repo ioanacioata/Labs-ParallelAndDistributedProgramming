@@ -21,9 +21,10 @@ public class PolynomialOperation {
 	 */
 	public static Polynomial multiplicationSequentialForm(Polynomial p1, Polynomial p2) {
 		int sizeOfResultCoefficientList = p1.getDegree() + p2.getDegree() + 1;
-		List<Integer> coefficients = IntStream.of(new int[sizeOfResultCoefficientList]).boxed().collect(Collectors
-				.toList());//initialize coefficient list with 0
-
+		List<Integer> coefficients = new ArrayList<>();
+		for (int i = 0; i < sizeOfResultCoefficientList; i++) {
+			coefficients.add(0);
+		}
 		for (int i = 0; i < p1.getCoefficients().size(); i++) {
 			for (int j = 0; j < p2.getCoefficients().size(); j++) {
 				int index = i + j;
@@ -72,8 +73,8 @@ public class PolynomialOperation {
 	}
 
 	public static Polynomial multiplicationKaratsubaSequentialForm(Polynomial p1, Polynomial p2) {
-		//not efficient if degree of polynomials <10
-		if (p1.getDegree() < 10 || p2.getDegree() < 10) {
+		//Otherwise you cannot split the polynomial => stack overflow
+		if (p1.getDegree() < 2 || p2.getDegree() < 2) {
 			return multiplicationSequentialForm(p1, p2);
 		}
 
@@ -99,7 +100,7 @@ public class PolynomialOperation {
 	 *
 	 * @param p1
 	 * @param p2
-	 * @param currentDepth
+	 * @param currentDepth - the dimension of the polynomial
 	 * @return
 	 */
 	public static Polynomial multiplicationKaratsubaParallelizedForm(Polynomial p1, Polynomial p2, int currentDepth)
@@ -107,9 +108,12 @@ public class PolynomialOperation {
 		if (currentDepth > 4) {
 			return multiplicationKaratsubaSequentialForm(p1, p2);
 		}
-		if (p1.getDegree() < 10 || p2.getDegree() < 10) {
+
+		//Otherwise you cannot split the polynomial => stack overflow
+		if (p1.getDegree() < 2 || p2.getDegree() < 2) {
 			return multiplicationSequentialForm(p1, p2);
 		}
+
 		int len = Math.max(p1.getDegree(), p2.getDegree()) / 2;
 		Polynomial lowP1 = new Polynomial(p1.getCoefficients().subList(0, len));
 		Polynomial highP1 = new Polynomial(p1.getCoefficients().subList(len, p1.getLength()));
@@ -226,11 +230,13 @@ public class PolynomialOperation {
 		addRemainingCoefficients(p1, p2, minDegree, maxDegree, coefficients);
 
 		//remove coefficients starting from biggest power if coefficient is 0
+
 		int i = coefficients.size() - 1;
-		while (coefficients.get(i) == 0) {
+		while (coefficients.get(i) == 0 && i > 0) {
 			coefficients.remove(i);
 			i--;
 		}
+
 		return new Polynomial(coefficients);
 	}
 }
