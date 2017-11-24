@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -80,13 +83,68 @@ public class PolynomialOperation {
 		Polynomial lowP2 = new Polynomial(p2.getCoefficients().subList(0, len));
 		Polynomial highP2 = new Polynomial(p2.getCoefficients().subList(len, p2.getLength()));
 
-		Polynomial z0 = multiplicationKaratsubaSequentialForm(lowP1, lowP2);
-		Polynomial z1 = multiplicationKaratsubaSequentialForm(add(lowP1, highP1), add(lowP2, highP2));
-		Polynomial z2 = multiplicationKaratsubaSequentialForm(highP1, highP2);
+		Polynomial z1 = multiplicationKaratsubaSequentialForm(lowP1, lowP2);
+		Polynomial z2 = multiplicationKaratsubaSequentialForm(add(lowP1, highP1), add(lowP2, highP2));
+		Polynomial z3 = multiplicationKaratsubaSequentialForm(highP1, highP2);
 
-		Polynomial q1 = shift(z2, 2 * len);
-		Polynomial q2 = shift(subtract(subtract(z1, z2), z0), len);
-		return add(add(q1, q2), z0);
+		//calculate the final result
+		Polynomial r1 = shift(z3, 2 * len);
+		Polynomial r2 = shift(subtract(subtract(z2, z3), z1), len);
+		Polynomial result = add(add(r1, r2), z1);
+		return result;
+	}
+
+	/**
+	 * Multiply two polynomials in parallel manner using Karatsuba method
+	 *
+	 * @param p1
+	 * @param p2
+	 * @param currentDepth
+	 * @return
+	 */
+	public static Polynomial multiplicationKaratsubaParallelizedForm(Polynomial p1, Polynomial p2, int currentDepth)
+			throws ExecutionException, InterruptedException {
+		if (currentDepth > 4) {
+			return multiplicationKaratsubaSequentialForm(p1, p2);
+		}
+		if (p1.getDegree() < 10 || p2.getDegree() < 10) {
+			return multiplicationSequentialForm(p1, p2);
+		}
+		int len = Math.max(p1.getDegree(), p2.getDegree()) / 2;
+		Polynomial lowP1 = new Polynomial(p1.getCoefficients().subList(0, len));
+		Polynomial highP1 = new Polynomial(p1.getCoefficients().subList(len, p1.getLength()));
+		Polynomial lowP2 = new Polynomial(p2.getCoefficients().subList(0, len));
+		Polynomial highP2 = new Polynomial(p2.getCoefficients().subList(len, p2.getLength()));
+
+		ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+		Callable<Polynomial> task1 = () -> {
+			return multiplicationKaratsubaParallelizedForm(lowP1, lowP2, currentDepth + 1);
+		};
+		Callable<Polynomial> task2 = () -> {
+			return multiplicationKaratsubaParallelizedForm(PolynomialOperation.add(lowP1, highP1), PolynomialOperation
+					.add(lowP2, highP2), currentDepth + 1);
+		};
+		Callable<Polynomial> task3 = () -> {
+			return multiplicationKaratsubaParallelizedForm(highP1, highP2, currentDepth);
+		};
+
+		Future<Polynomial> f1 = executor.submit(task1);
+		Future<Polynomial> f2 = executor.submit(task2);
+		Future<Polynomial> f3 = executor.submit(task3);
+
+		executor.shutdown();
+
+		Polynomial z1 = f1.get();
+		Polynomial z2 = f2.get();
+		Polynomial z3 = f3.get();
+
+		executor.awaitTermination(60, TimeUnit.SECONDS);
+
+		//calculate the final result
+		Polynomial r1 = shift(z3, 2 * len);
+		Polynomial r2 = shift(subtract(subtract(z2, z3), z1), len);
+		Polynomial result = add(add(r1, r2), z1);
+		return result;
 	}
 
 	/**
@@ -106,11 +164,6 @@ public class PolynomialOperation {
 			coefficients.add(p.getCoefficients().get(i));
 		}
 		return new Polynomial(coefficients);
-	}
-
-	public static Polynomial multiplicationKaratsubaParallelizedForm(Polynomial p1, Polynomial p2) {
-
-		return null;
 	}
 
 	/**
@@ -165,7 +218,7 @@ public class PolynomialOperation {
 		int maxDegree = Math.max(p1.getDegree(), p2.getDegree());
 		List<Integer> coefficients = new ArrayList<>(maxDegree + 1);
 
-		//Add the 2 polynomials
+		//Subtract the 2 polynomials
 		for (int i = 0; i <= minDegree; i++) {
 			coefficients.add(p1.getCoefficients().get(i) - p2.getCoefficients().get(i));
 		}
