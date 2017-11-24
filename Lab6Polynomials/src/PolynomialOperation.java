@@ -16,11 +16,7 @@ public class PolynomialOperation {
 	 * @param p2 - Polynomial
 	 * @return the resulted polynomials after the multiplication
 	 */
-<<<<<<< HEAD
 	public static Polynomial multiplicationSequentialForm(Polynomial p1, Polynomial p2) {
-=======
-	public static Polynomial multiplicationSequencialForm(Polynomial p1, Polynomial p2) {
->>>>>>> master
 		int sizeOfResultCoefficientList = p1.getDegree() + p2.getDegree() + 1;
 		List<Integer> coefficients = IntStream.of(new int[sizeOfResultCoefficientList]).boxed().collect(Collectors
 				.toList());//initialize coefficient list with 0
@@ -59,11 +55,7 @@ public class PolynomialOperation {
 			step = 1;
 		}
 		//System.out.println("STEP: " + step);
-<<<<<<< HEAD
 		int end;
-=======
-		int end ;
->>>>>>> master
 		for (int i = 0; i < result.getLength(); i += step) {
 			end = i + step;
 			MultiplicationTask task = new MultiplicationTask(i, end, p1, p2, result);
@@ -76,7 +68,6 @@ public class PolynomialOperation {
 		return result;
 	}
 
-<<<<<<< HEAD
 	public static Polynomial multiplicationKaratsubaSequentialForm(Polynomial p1, Polynomial p2) {
 		//not efficient if degree of polynomials <10
 		if (p1.getDegree() < 10 || p2.getDegree() < 10) {
@@ -115,11 +106,6 @@ public class PolynomialOperation {
 			coefficients.add(p.getCoefficients().get(i));
 		}
 		return new Polynomial(coefficients);
-=======
-	public static Polynomial multiplicationKaratsubaSequencialForm(Polynomial p1, Polynomial p2) {
-
-		return null;
->>>>>>> master
 	}
 
 	public static Polynomial multiplicationKaratsubaParallelizedForm(Polynomial p1, Polynomial p2) {
