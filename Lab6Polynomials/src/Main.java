@@ -3,8 +3,8 @@ import java.util.concurrent.ExecutionException;
 public class Main {
 	public static void main(String[] args) throws InterruptedException, ExecutionException {
 
-		Polynomial p = new Polynomial(1000);
-		Polynomial q = new Polynomial(1000);
+		Polynomial p = new Polynomial(7000);
+		Polynomial q = new Polynomial(7000);
 //		Polynomial p = new Polynomial(new ArrayList<Integer>(Arrays.asList(5, 4, 2, 4)));
 //		Polynomial q = new Polynomial(new ArrayList<Integer>(Arrays.asList(6, 3, 7)));
 

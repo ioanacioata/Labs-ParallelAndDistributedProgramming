@@ -11,6 +11,9 @@ import java.util.stream.IntStream;
 
 public class PolynomialOperation {
 
+	public static final int OPTIM_DEGREE = 100;
+	public static final int OPTIM_DEGREE_SIMPLE_MULT = 20;
+
 	/**
 	 * Simple sequenctial multiplication operation over 2 polynomials.
 	 * Time complexity: O(n^2)
@@ -73,8 +76,8 @@ public class PolynomialOperation {
 	}
 
 	public static Polynomial multiplicationKaratsubaSequentialForm(Polynomial p1, Polynomial p2) {
-		//Otherwise you cannot split the polynomial => stack overflow
-		if (p1.getDegree() < 2 || p2.getDegree() < 2) {
+		//Otherwise you cannot split the polynomial => stack overflow (with 2 it works)
+		if (p1.getDegree() < OPTIM_DEGREE_SIMPLE_MULT || p2.getDegree() < OPTIM_DEGREE_SIMPLE_MULT) {
 			return multiplicationSequentialForm(p1, p2);
 		}
 
@@ -105,13 +108,15 @@ public class PolynomialOperation {
 	 */
 	public static Polynomial multiplicationKaratsubaParallelizedForm(Polynomial p1, Polynomial p2, int currentDepth)
 			throws ExecutionException, InterruptedException {
+		//E impartit deja de 4 ori si pentru ca e recursiv, nu mai împarțim in mai mult pt ca nu încape pe stack-ul
+		// intern
 		if (currentDepth > 4) {
 			return multiplicationKaratsubaSequentialForm(p1, p2);
 		}
 
 		//Otherwise you cannot split the polynomial => stack overflow
-		if (p1.getDegree() < 2 || p2.getDegree() < 2) {
-			return multiplicationSequentialForm(p1, p2);
+		if (p1.getDegree() < OPTIM_DEGREE || p2.getDegree() < OPTIM_DEGREE) {
+			return multiplicationKaratsubaSequentialForm(p1, p2);
 		}
 
 		int len = Math.max(p1.getDegree(), p2.getDegree()) / 2;
