@@ -2,16 +2,18 @@ import java.util.concurrent.ExecutionException;
 
 public class App {
 		public static void main(String[] args) throws ExecutionException, InterruptedException {
-//				exampleNotHamiltonianGraph();
+				exampleNotHamiltonianGraph();
+
+				System.out.println("\n");
 
 				exampleHamiltonianGraph();
 		}
 
 		private static void exampleHamiltonianGraph() throws ExecutionException, InterruptedException {
 				Graph graph2 = new Graph();
-				graph2.addEdge(2,4);
-				graph2.addEdge(2,5);
-				graph2.addEdge(5,3);
+				graph2.addEdge(2, 4);
+				graph2.addEdge(2, 5);
+				graph2.addEdge(5, 3);
 
 				graph2.addEdge(1, 2);
 				graph2.addEdge(2, 3);

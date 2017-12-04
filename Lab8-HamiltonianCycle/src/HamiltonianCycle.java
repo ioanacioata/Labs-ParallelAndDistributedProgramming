@@ -5,14 +5,12 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class HamiltonianCycle {
 		private Graph graph;
 
 		private int[] finalSolution;
 		private ExecutorService service;
-		private AtomicBoolean found;
 
 		public HamiltonianCycle(Graph graph) {
 				this.graph = graph;
@@ -20,7 +18,6 @@ public class HamiltonianCycle {
 
 		public boolean findHamCycle(int nrThreads) throws ExecutionException, InterruptedException {
 				int[] path = new int[graph.getVertexNr()];
-				found = new AtomicBoolean(false);
 				for (int i = 0; i < graph.getVertexNr(); i++) {
 						path[i] = -1;
 				}
@@ -32,7 +29,7 @@ public class HamiltonianCycle {
 				}
 
 				service.shutdownNow();
-				printPath(finalSolution);
+				printPath(finalSolution, "Solution exists - the hamiltonian cycle is: ");
 				return true;
 		}
 
@@ -44,22 +41,12 @@ public class HamiltonianCycle {
 		 */
 		private boolean hamiltonianCycleUtil(int pos, int nrThreads, int[] pathParam) throws ExecutionException,
 				InterruptedException {
-				if (found.equals(new AtomicBoolean(true))) {
-						finalSolution = Arrays.copyOf(pathParam, graph.getVertexNr());
-						return true;
-				}
+
 				//check if all vertices are included in the Ham Cycle
 				if (pos == graph.getVertexNr()) {
-						StringBuilder s = new StringBuilder("sol : ");
-						for (int i = 0; i < pos; i++) {
-								s.append(" ").append(pathParam[i]).append(" ");
-						}
-						System.out.println(s.toString());
 						//and if there is an edge from the last included vertex to the first included vertex
 						if (graph.hasEdge(pathParam[pos - 1], pathParam[0])) {
-								System.out.println("here");
 								finalSolution = Arrays.copyOf(pathParam, graph.getVertexNr());
-								printPath(pathParam);
 								return true;
 						} else {
 								return false;
@@ -74,11 +61,7 @@ public class HamiltonianCycle {
 								if (canAddToPath(pos, v, pathParam)) {
 										pathParam[pos] = v;
 
-										StringBuilder s = new StringBuilder("sol : ");
-										for (int i = 0; i < pos; i++) {
-												s.append(" ").append(pathParam[i]).append(" ");
-										}
-										System.out.println(s.toString());
+										printPath(pathParam, "sol nr th>1 : ");
 
 										int[] copyPath = Arrays.copyOf(pathParam, graph.getVertexNr());
 										resultList.add(service.submit(() -> hamiltonianCycleUtil(pos + 1, nrThreads / graph.getVertexNr(),
@@ -86,11 +69,10 @@ public class HamiltonianCycle {
 								}
 						}
 
+						//get the result from the executed threads -- if a Hamiltonian cycle was found
 						for (Future<Boolean> f : resultList) {
 								Boolean res = f.get();
 								if (res) {
-										found = new AtomicBoolean(true);
-										finalSolution = Arrays.copyOf(pathParam, graph.getVertexNr());
 										return true;
 								}
 						}
@@ -98,16 +80,10 @@ public class HamiltonianCycle {
 						for (Integer v : graph.getVetices()) {
 								if (canAddToPath(pos, v, pathParam)) {
 
-										StringBuilder s = new StringBuilder("sol else: ");
-										for (int i = 0; i < pos; i++) {
-												s.append(" ").append(pathParam[i]).append(" ");
-										}
-										System.out.println(s.toString());
+										printPath(pathParam, "sol: ");
 
 										pathParam[pos] = v;
 										if (hamiltonianCycleUtil(pos + 1, 1, pathParam)) {
-												found = new AtomicBoolean(true);
-												finalSolution = Arrays.copyOf(pathParam, graph.getVertexNr());
 												return true;
 										}
 								}
@@ -131,8 +107,8 @@ public class HamiltonianCycle {
 				return true;
 		}
 
-		private void printPath(int[] path) {
-				StringBuilder str = new StringBuilder("Solution exists - the hamiltonian cycle is: ");
+		private void printPath(int[] path, String message) {
+				StringBuilder str = new StringBuilder(message);
 				for (int i = 0; i < graph.getVertexNr(); i++) {
 						str.append(" ").append(path[i]).append(" ");
 				}
