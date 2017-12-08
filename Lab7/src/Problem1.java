@@ -36,7 +36,7 @@ public class Problem1 {
 						latch.await();
 				}
 
-				System.out.println("After bottom up: ");
+				System.out.println("After Bottom-Up: ");
 				Main.printArray(s);
 
 				int last = s[n - 1];
@@ -44,7 +44,7 @@ public class Problem1 {
 				//calculate from odd positions - top down (binary tree)
 				s[n - 1] = 0;
 
-				for (int d = myLog2(n)-1; d >= 0; d--) {
+				for (int d = myLog2(n) - 1; d >= 0; d--) {
 						int taskNumber = (int) (n / Math.pow(2, d + 1));
 
 						CountDownLatch latch = new CountDownLatch(taskNumber);
@@ -64,7 +64,7 @@ public class Problem1 {
 
 				service.shutdownNow();
 
-				System.out.println("After Top- down: ");
+				System.out.println("After Top-Down: ");
 				Main.printArray(s);
 
 				//shift array for result
@@ -87,7 +87,7 @@ public class Problem1 {
 						}
 				}
 
-				System.out.println("After bottom up: ");
+				System.out.println("After Bottom-Up: ");
 				Main.printArray(s);
 
 				int last = s[n - 1];
@@ -95,7 +95,7 @@ public class Problem1 {
 				//calculate from odd positions - top down (binary tree)
 				s[n - 1] = 0;
 
-				for (int d = myLog2(n)-1; d >= 0; d--) {
+				for (int d = myLog2(n) - 1; d >= 0; d--) {
 
 						for (int i = 0; i <= n - 1; i += (int) Math.pow(2, d + 1)) {
 								int temp = s[i + (int) Math.pow(2, d) - 1];
@@ -118,7 +118,7 @@ public class Problem1 {
 				Main.printArray(result);
 		}
 
-		private static int myLog2(int n) {
+		public static int myLog2(int n) {
 				return (int) (Math.log(n) / Math.log(2));
 		}
 }
