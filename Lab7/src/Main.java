@@ -27,7 +27,7 @@ public class Main {
 
 		private static void problem2() {
 				Problem2 p02 = new Problem2(generateBigNumberArray(POWER_OF_TWO));
-//        String[] arr = {"1234", "5138", "7000", "1"};
+//        String[] arr = {"2048", "70000", "876", "1"};
 //        Problem2 p02 = new Problem2(arr);
 				try {
 						p02.run();

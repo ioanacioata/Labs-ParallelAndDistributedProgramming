@@ -25,6 +25,7 @@ public class HamiltonianCycle {
 				//put the first vertex in the path for start
 				path[0] = graph.getVetices().get(0);
 				if (!hamiltonianCycleUtil(1, nrThreads, path)) {
+						service.shutdownNow();
 						return false;
 				}
 

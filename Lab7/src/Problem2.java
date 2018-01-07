@@ -26,9 +26,7 @@ public class Problem2 {
 
 		public static Queue<Integer> QueueDigits(String bigNo) {
 				Queue<Integer> queue = new LinkedList<>();
-				//System.out.println("BIGNO " + bigNo);
 				for (int i = bigNo.length() - 1; i >= 0; i--) {
-						//System.out.println("i " + i);
 						char c = bigNo.charAt(i);
 						queue.add(charToInt(c));
 				}
